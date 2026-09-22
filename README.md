@@ -1,5 +1,7 @@
 # Nierentausch – Tausch unter medizinischen Zwängen – Streamlit-Demo
 
+**[→ Demo live ausprobieren](https://sebastianhanisch-nierentausch-demo.streamlit.app/)**
+
 Dreizehntes und letztes Stück der **Matching-Linie** der "Konzepte"-Reihe für die Website "Sebastian Hanisch – Operations Research und Machine Learning", direkte Erweiterung von [top-trading-cycles-demo](https://github.com/sebastian-hanisch/top-trading-cycles-demo) – inspiriert von Alvin Roths Arbeiten zu Marktdesign ohne Geld.
 
 **Top Trading Cycles** löst den Wohnungsmarkt: vollständige Präferenzen, beliebig lange Tauschkreise. Bei Nieren geht das nicht: ein Patient braucht nicht "die beste" Niere, sondern irgendeine **kompatible** – und jede Operation eines Kreises muss **gleichzeitig** stattfinden (kein Spender darf geben, bevor sein eigener Patient schon versorgt ist, sonst könnte ein früherer Spender leer ausgehen, wenn ein späteres Glied ausfällt). Eine **Kette**, gestartet von einem altruistischen Spender, braucht das nicht: fällt ein Glied aus, verliert nur das nächste Glied, niemand, der schon gespendet hat. Kreislänge 2 (Paartausch) ist dabei **exakt lösbar** (Roth, Sönmez & Ünver 2005); ab Länge 3 wird die Auswahl **NP-schwer** (Abraham, Blum & Sandholm 2007).
