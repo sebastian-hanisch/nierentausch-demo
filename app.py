@@ -12,7 +12,7 @@ import streamlit as st
 
 import nt_constants as C
 import nt_evaluation as ev
-from nt_presets import apply_preset, bounds, init_session_state_defaults, load_permalink_settings, randomize_seed, sync_query_params
+from nt_presets import KEPT, apply_preset, bounds, init_session_state_defaults, load_permalink_settings, randomize_seed, sync_query_params, seed_widget
 from nt_visualization import build_cap_comparison, build_graph, build_length_hist, build_scale
 
 st.set_page_config(page_title="Nierentausch – Sebastian Hanisch", layout="wide")
@@ -100,17 +100,23 @@ with st.sidebar:
     st.header("⚙️ Einstellungen")
     card = st.session_state.get("card_select", C.CARD_NONE)
     if card == C.CARD_NONE:
+        seed_widget("n_slider")
         n = st.slider("Unverträgliche Paare", *bounds("n_slider"), key="n_slider")
+        seed_widget("n_alt_slider")
         n_alt = st.slider("Altruistische Spender", *bounds("n_alt_slider"), key="n_alt_slider")
+        seed_widget("sens_slider")
         sens = st.slider("Sensibilisierung (Obergrenze) [%]", *bounds("sens_slider"), key="sens_slider", step=C.SENS_STEP,
                          help="Obergrenze der Ziehung 0..Wert je Patient; höher = mehr scheiternde Crossmatches.")
+        seed_widget("cap_slider")
         cap = st.slider("Kreis-Höchstlänge K", *bounds("cap_slider"), key="cap_slider")
+        seed_widget("chain_cap_slider")
         chain_cap = st.slider("Ketten-Höchstlänge", *bounds("chain_cap_slider"), key="chain_cap_slider")
+        seed_widget("seed_input")
         seed = st.number_input("Zufalls-Seed", *bounds("seed_input"), key="seed_input", step=1)
         st.button("🎲 Neuen Pool generieren", width="stretch", on_click=randomize_seed)
     else:
-        n, n_alt, sens = st.session_state.get("n_slider", C.DEFAULT_N), st.session_state.get("n_alt_slider", C.DEFAULT_N_ALT), st.session_state.get("sens_slider", C.DEFAULT_SENS)
-        cap, chain_cap, seed = st.session_state.get("cap_slider", C.DEFAULT_CAP), st.session_state.get("chain_cap_slider", C.DEFAULT_CHAIN_CAP), st.session_state.get("seed_input", C.DEFAULT_SEED)
+        n, n_alt, sens = st.session_state.get("n_slider", st.session_state.get(KEPT["n_slider"], C.DEFAULT_N)), st.session_state.get("n_alt_slider", st.session_state.get(KEPT["n_alt_slider"], C.DEFAULT_N_ALT)), st.session_state.get("sens_slider", st.session_state.get(KEPT["sens_slider"], C.DEFAULT_SENS))
+        cap, chain_cap, seed = st.session_state.get("cap_slider", st.session_state.get(KEPT["cap_slider"], C.DEFAULT_CAP)), st.session_state.get("chain_cap_slider", st.session_state.get(KEPT["chain_cap_slider"], C.DEFAULT_CHAIN_CAP)), st.session_state.get("seed_input", st.session_state.get(KEPT["seed_input"], C.DEFAULT_SEED))
         st.caption(f"Feste Karte ({C.CARD_LABELS[card]}) - es gibt nichts zu erzeugen.")
 
 params = (card, int(n), int(n_alt), int(sens), int(cap), int(chain_cap), int(seed))
