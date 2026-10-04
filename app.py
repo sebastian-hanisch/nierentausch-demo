@@ -269,7 +269,7 @@ besteht. Gesucht: eine Menge disjunkter Kreise (Länge $2 \le k \le K$) und Kett
 Spender, Länge $\le L$), die zuerst die Patientenzahl, dann die Qualität maximiert.
 
 **Kappung 2 (Roth, Sönmez & Ünver 2005, *JET*, "Pairwise Kidney Exchange").** Reiner Paartausch ist logistisch
-einfacher, weil nur 2 gleichzeitige Operationsteams nötig sind (statt $2k$ bei einem $k$-Kreis). Er reduziert exakt
+einfacher, weil nur 4 gleichzeitige Operationen nötig sind (statt $2k$ bei einem $k$-Kreis). Er reduziert exakt
 auf Maximum-Weight-Matching im allgemeinen Graphen - lösbar mit Edmonds' Blossom-Algorithmus (`nt_blossom.py`).
 
 **Warum Kreise Simultan-OPs brauchen, Ketten nicht.** In einem $k$-Kreis darf kein Spender geben, bevor sein eigener
@@ -282,7 +282,7 @@ Extended, Altruistic-Donor Chain").
 Grundlage echter Kidney-Exchange-Clearinghouses). Roth, Sönmez & Ünver (2007, *AER*, "Efficient Kidney Exchange")
 zeigen: der Schritt von 2er- auf 3er-Tausch bringt einen substanziellen Zugewinn, längere Kreise kaum noch mehr.
 
-Implementiert in `nt_scenario.py` (Kompatibilitätsgraph, ABO-Regel, ISBN-artige ABO-Tabelle), `nt_blossom.py`
+Implementiert in `nt_scenario.py` (Kompatibilitätsgraph, ABO-Regel, ABO-Tabelle), `nt_blossom.py`
 (Kappung 2, Kopie von `weighted-blossom-demo/wb_blossom.py`), `nt_exchange.py` (Kandidatenerzeugung,
 Mehrfachstart-Heuristik mit Sicherheitsnetz), `nt_oracle.py` (Brute-Force-Orakel, nur in den Tests).
         """
@@ -292,6 +292,6 @@ st.markdown("---")
 
 st.caption(
     "Diese Demo ist Teil des Portfolios von [Sebastian Hanisch](https://sebastianhanisch.net) – "
-    "Operations Research und Machine Learning. Interesse an einer maßgeschneiderten Lösung für "
-    "Ihr Unternehmen? [Kontakt aufnehmen](https://sebastianhanisch.net/kontakt.html)"
+    "Operations Research und Machine Learning ([Über mich](https://sebastianhanisch.net/ueber-mich.html)). "
+    "Mehr zur Reihe: [Matching: von Greedy bis Nierentausch](https://sebastianhanisch.net/konzepte-matching.html)."
 )

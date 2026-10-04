@@ -45,7 +45,7 @@ PRESET_HELP = {
     "⛓️ Ketten-Lehrbuchkarte": "Von Hand nachvollzogen (n=6, 1 altruistischer Spender): bei reinem Paartausch erreicht die Kette nur 1 Patienten (Qualität 77). Mit Kettenlimit 4 verlängert sie sich auf 4 Glieder (Qualität 286) - der GESAMTE Zugewinn kommt allein aus der längeren Kette, kein Kreis beteiligt.",
     "🔁 Kreis-Lehrbuchkarte": "Von Hand nachvollzogen (n=6, 1 altruistischer Spender), als Kontrast: bei Kappung 2 ein 2er-Kreis (2 Patienten, Qualität 93). Bei Kappung 3 ersetzt ihn ein 3er-Kreis (3 Patienten, Qualität 183) - hier kommt der Zugewinn rein aus der Kreislänge, keine Kette beteiligt.",
     "🗺️ Mittlere Karte": "Realistische Einstellungen: reiner Paartausch versorgt im Mittel 57 % des Pools, der allgemeine Modus (Kreise bis 3, Ketten bis 4) 62 %.",
-    "🙋 Viele altruistische Spender": "8 altruistische Spender auf 25 Paare: deutlich mehr Ketten als auf der Standardkarte.",
+    "🙋 Viele altruistische Spender": "6 altruistische Spender auf 25 Paare: deutlich mehr Ketten als auf der Standardkarte.",
     "👫 Nur Paartausch (Kappung 2)": "Kappung 2 ist EXAKT lösbar (Maximum-Weight-Matching, `nt_blossom.py`) - der Kontrast zum allgemeinen, nur heuristisch lösbaren Modus.",
     "🧬 Hohe Sensibilisierung": "Sensibilisierung bis 90 %: viele sonst ABO-passende Kanten scheitern am simulierten Crossmatch, der Pool wird spärlicher.",
     "😴 Kein Kompatibilitätsglück": "Negativbeispiel, bewusst gezeigt: ohne altruistische Spender UND ohne die Crossmatch-Regel (Sensibilisierung 0) ist der Kompatibilitätsgraph fast bipartit - O-Patienten sind unerreichbar, 3er-Kreise praktisch unmöglich.",
