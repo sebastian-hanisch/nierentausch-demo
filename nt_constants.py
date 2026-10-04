@@ -47,7 +47,7 @@ PRESET_HELP = {
     "🗺️ Mittlere Karte": "Realistische Einstellungen: reiner Paartausch versorgt im Mittel 57 % des Pools, der allgemeine Modus (Kreise bis 3, Ketten bis 4) 62 %.",
     "🙋 Viele altruistische Spender": "6 altruistische Spender auf 25 Paare: deutlich mehr Ketten als auf der Standardkarte.",
     "👫 Nur Paartausch (Kappung 2)": "Kappung 2 ist EXAKT lösbar (Maximum-Weight-Matching, `nt_blossom.py`) - der Kontrast zum allgemeinen, nur heuristisch lösbaren Modus.",
-    "🧬 Hohe Sensibilisierung": "Sensibilisierung bis 90 %: viele sonst ABO-passende Kanten scheitern am simulierten Crossmatch, der Pool wird spärlicher.",
+    "🧬 Hohe Sensibilisierung": "Sensibilisierung bis 90 %: viele sonst ABO-passende Kanten scheitern am simulierten Crossmatch. Der Effekt ist aber schwach: über die 100 festen Karten gibt es 594 statt 653 Kandidaten (Standard: Sensibilisierung bis 60 %), im Mittel werden 60,5 % statt 61,6 % der Paare versorgt, bei reinem Paartausch 53 % statt 57 %.",
     "😴 Kein Kompatibilitätsglück": "Negativbeispiel, bewusst gezeigt: ohne altruistische Spender UND ohne die Crossmatch-Regel (Sensibilisierung 0) ist der Kompatibilitätsgraph fast bipartit - O-Patienten sind unerreichbar, 3er-Kreise praktisch unmöglich.",
     "🔬 Beweis": "Kleine Karte (n=8): klein genug, dass `nt_oracle.py` die optimale Kreis-/Kettenauswahl erschöpfend nachprüfen kann (in den Tests, nicht live in der App).",
 }

@@ -79,3 +79,11 @@ def test_chain_and_cycle_example_cards():
     res_cycle = solve(S.cycle_example(), 3, 1)
     assert sum(c.size for c in res_cycle.chosen) == 3
     assert sum(c.quality for c in res_cycle.chosen) == 183
+
+
+def test_high_sensitization_preset_help():
+    """Belegt den Hilfetext des Presets 'Hohe Sensibilisierung': Sensibilisierung bis 90 % statt 60 % senkt Auswahl und Versorgung nur schwach."""
+    d90 = ev.distribution(25, 3, 90, 3, 4)
+    assert d90["n_candidates_total"] == 594
+    near(d90["matched_share"]["mean"], 0.6048, 0.001)
+    near(d90["cap2_share"]["mean"], 0.532, 0.001)
