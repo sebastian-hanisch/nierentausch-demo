@@ -24,6 +24,7 @@ GREEDY_ORDERS = (
     ("ratio", lambda c: (-c.quality / c.size, -c.size)),
 )
 N_RANDOM_RESTARTS = 8
+CAP2_PATIENT_WEIGHT = 100_000       # Gewicht je versorgtem Patienten im Kappung-2-Matching (> jede Gesamtqualität)
 RESTART_STREAM_XOR = 0x524553544152545F
 
 
@@ -135,13 +136,13 @@ def _cap2_as_candidates(sc):
     out = []
     for i, j in res.pairs:
         lbl_i, lbl_j = ms.labels[i], ms.labels[j]
-        q = -int(ms.cost[i, j])
+        w = -int(ms.cost[i, j])             # = Patientengewicht + Qualität (siehe _build_match_scenario)
         if lbl_i[0] == "alt":
-            out.append(Candidate("chain", (lbl_j[1],), lbl_i[1], q))
+            out.append(Candidate("chain", (lbl_j[1],), lbl_i[1], w - CAP2_PATIENT_WEIGHT))
         elif lbl_j[0] == "alt":
-            out.append(Candidate("chain", (lbl_i[1],), lbl_j[1], q))
+            out.append(Candidate("chain", (lbl_i[1],), lbl_j[1], w - CAP2_PATIENT_WEIGHT))
         else:
-            out.append(Candidate("cycle", (lbl_i[1], lbl_j[1]), -1, q))
+            out.append(Candidate("cycle", (lbl_i[1], lbl_j[1]), -1, w - 2 * CAP2_PATIENT_WEIGHT))
     return out
 
 
@@ -155,10 +156,15 @@ class MatchScenario:
 
 def _build_match_scenario(sc):
     """Ungerichteter Hilfsgraph für Kappung 2: Knoten = Paare + altruistische Spender. Kante Paar i - Paar j nur bei
-    GEGENSEITIGER Verträglichkeit (Gewicht = Summe beider Qualitäten als NEGATIVE Kosten, siehe `nt_blossom.py`s
-    Dokumentation - `maxcardinality=False` + `cost = -Qualität` maximiert Qualität direkt, ohne Kardinalitätszwang
-    und ohne den (maxcost+1)-Trick, der hier fehl am Platz wäre). Kante altruistischer Spender a - Paar i bei
-    einseitiger Verträglichkeit (Domino-Spende, Kettenlänge 1)."""
+    GEGENSEITIGER Verträglichkeit. Kante altruistischer Spender a - Paar i bei einseitiger Verträglichkeit
+    (Domino-Spende, Kettenlänge 1).
+
+    Gewicht (als NEGATIVE Kosten, siehe `nt_blossom.py`s Dokumentation, `maxcardinality=False`): `CAP2_PATIENT_WEIGHT`
+    je versorgtem Patienten PLUS die Qualität. Das Ziel ist lexikografisch (zuerst Patientenzahl, dann Qualität, siehe
+    `nt_evaluation.py`); ein reines Qualitätsgewicht (Summe der Kantenqualitäten, 40-99 je Kante) maximiert dagegen nur
+    die Qualität und kann zwei hochwertige Kanten statt vier etwas schlechterer wählen - mit Orakel (`milp` und
+    `networkx.max_weight_matching`) gemessen: auf 2 von 100 festen Karten (n=25) wurden so Patienten verschenkt. Das
+    Patientengewicht liegt über jeder möglichen Gesamtqualität (<= 99 * 2 * 45), die Ganzzahlarithmetik bleibt exakt."""
     import numpy as np
     n_pairs, n_alt = sc.n, sc.n_alt
     n = n_pairs + n_alt
@@ -170,7 +176,7 @@ def _build_match_scenario(sc):
             q_ij = sc.edge_quality(i, j, False)
             q_ji = sc.edge_quality(j, i, False)
             if q_ij is not None and q_ji is not None:
-                cost[i, j] = cost[j, i] = -(q_ij + q_ji)
+                cost[i, j] = cost[j, i] = -(2 * CAP2_PATIENT_WEIGHT + q_ij + q_ji)
                 adj[i].append(j)
                 adj[j].append(i)
     for a in range(n_alt):
@@ -178,7 +184,7 @@ def _build_match_scenario(sc):
         for i in range(n_pairs):
             q = sc.edge_quality(a, i, True)
             if q is not None:
-                cost[node_a, i] = cost[i, node_a] = -q
+                cost[node_a, i] = cost[i, node_a] = -(CAP2_PATIENT_WEIGHT + q)
                 adj[node_a].append(i)
                 adj[i].append(node_a)
     adj = [sorted(a) for a in adj]

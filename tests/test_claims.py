@@ -17,35 +17,35 @@ def dist():
 
 
 def test_default_map_matched_share(dist):
-    near(dist["matched_share"]["mean"], 0.6156, 0.001)
+    near(dist["matched_share"]["mean"], 0.6168, 0.001)
     assert dist["matched_share"]["median"] == 0.6
-    near(dist["cap2_share"]["mean"], 0.5696, 0.001)
+    near(dist["cap2_share"]["mean"], 0.5708, 0.001)
     assert dist["cap2_share"]["median"] == 0.56
 
 
 def test_default_map_quality(dist):
-    near(dist["quality"]["mean"], 1173.02, 0.5)
+    near(dist["quality"]["mean"], 1172.55, 0.5)
     assert dist["quality"]["median"] == 1138.0
-    near(dist["cap2_quality"]["mean"], 1098.53, 0.5)
+    near(dist["cap2_quality"]["mean"], 1098.06, 0.5)
     assert dist["cap2_quality"]["median"] == 1043.0
 
 
 def test_default_map_effort(dist):
-    near(dist["steps"]["mean"], 122751.02, 5)
+    near(dist["steps"]["mean"], 122751.04, 5)
     assert dist["steps"]["median"] == 98201.0
 
 
 def test_length_distribution(dist):
-    assert dist["n_candidates_total"] == 653
-    assert dist["length_hist"] == {1: 107, 2: 326, 3: 100, 4: 120}
+    assert dist["n_candidates_total"] == 655
+    assert dist["length_hist"] == {1: 108, 2: 327, 3: 100, 4: 120}
 
 
 def test_altruistic_contribution():
     r = ev.altruistic_contribution(25, 60, 3)
-    near(r["matched_gain"]["mean"], 2.18, 0.02)
+    near(r["matched_gain"]["mean"], 2.21, 0.02)
     assert r["matched_gain"]["median"] == 2.0
-    near(r["quality_gain"]["mean"], 182.46, 1.0)
-    assert r["quality_gain"]["median"] == 165.0
+    near(r["quality_gain"]["mean"], 181.99, 1.0)
+    assert r["quality_gain"]["median"] == 163.0
 
 
 def test_naive_vs_cap2_and_safety_net():
@@ -55,7 +55,7 @@ def test_naive_vs_cap2_and_safety_net():
 
 def test_effort_scaling():
     rows = {r["n"]: r["steps"] for r in ev.effort_scaling(60)}
-    expect = {10: 530.8, 20: 18003.6, 25: 91058.4, 30: 253298.2, 35: 644797.4}
+    expect = {10: 530.8, 20: 18003.6, 25: 91058.4, 30: 253298.2, 35: 644797.6}
     for n, steps in expect.items():
         near(rows[n], steps, max(1.0, steps * 0.02))
     ns = sorted(expect)
@@ -84,6 +84,6 @@ def test_chain_and_cycle_example_cards():
 def test_high_sensitization_preset_help():
     """Belegt den Hilfetext des Presets 'Hohe Sensibilisierung': Sensibilisierung bis 90 % statt 60 % senkt Auswahl und Versorgung nur schwach."""
     d90 = ev.distribution(25, 3, 90, 3, 4)
-    assert d90["n_candidates_total"] == 594
-    near(d90["matched_share"]["mean"], 0.6048, 0.001)
-    near(d90["cap2_share"]["mean"], 0.532, 0.001)
+    assert d90["n_candidates_total"] == 595
+    near(d90["matched_share"]["mean"], 0.606, 0.001)
+    near(d90["cap2_share"]["mean"], 0.534, 0.001)

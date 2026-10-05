@@ -23,12 +23,12 @@ Jede hier genannte Zahl ist in `tests/test_claims.py` über die 100 festen Karte
 
 | Frage | Ergebnis |
 |---|---|
-| Versorgungsanteil | ✅ Im Mittel **61,6 %** (Median 60 %) im allgemeinen Modus, gegenüber **57,0 %** (Median 56 %) bei reinem Paartausch (Kappung 2). |
-| Qualität | ✅ Im Mittel **1173** (Median 1138) im allgemeinen Modus, gegenüber **1099** (Median 1043) bei Kappung 2. |
-| Beitrag altruistischer Spender | ✅ 3 altruistische Spender (12 % der Paarzahl) bringen im Mittel **+2,2** (Median +2,0) zusätzliche Patienten und **+182** (Median +165) zusätzliche Qualität. |
+| Versorgungsanteil | ✅ Im Mittel **61,7 %** (Median 60 %) im allgemeinen Modus, gegenüber **57,1 %** (Median 56 %) bei reinem Paartausch (Kappung 2). |
+| Qualität | ✅ Im Mittel **1173** (Median 1138) im allgemeinen Modus, gegenüber **1098** (Median 1043) bei Kappung 2. |
+| Beitrag altruistischer Spender | ✅ 3 altruistische Spender (12 % der Paarzahl) bringen im Mittel **+2,2** (Median +2,0) zusätzliche Patienten und **+182** (Median +163) zusätzliche Qualität. |
 | Ehrlichkeit der Heuristik | ⚠️ Eine einfache, unsortierte Greedy-Reihenfolge verliert auf **58 von 100** Karten gegen die exakte Kappung-2-Lösung – obwohl ihr Kandidatenraum strikt größer ist. Die Mehrfachstart-Heuristik MIT dem Kappung-2-Sicherheitsnetz verliert auf **0 von 100** – das Sicherheitsnetz erzwingt das, nicht die Heuristik selbst. |
 | Heuristik-Genauigkeit gegen das Orakel | ⚠️ An kleinen Karten (n=6–9, gegen `nt_oracle.py`): **58 von 80** exakt (72,5 %), mittlere Lücke 0,15 Patienten, größte beobachtete Lücke 2 – ehrlich berichtet, nicht auf 0 Abweichungen geschönt. |
-| Kappung 2 selbst | ✅ **0 von 60** Abweichungen gegen das Orakel – Kappung 2 ist beweisbar exakt (Maximum-Weight-Matching, `nt_blossom.py`). |
+| Kappung 2 selbst | ✅ **0 von 60** Abweichungen gegen das Orakel – Kappung 2 ist exakt (Maximum-Weight-Matching, `nt_blossom.py`, Gewicht = Patientenzahl lexikografisch vor Qualität). Ein früheres reines Qualitätsgewicht verschenkte auf 2 von 100 Karten (n=25) Patienten, siehe unten. |
 
 ## Was nicht funktioniert hat / widerlegte Vorab-Hypothesen
 
@@ -37,6 +37,7 @@ Jede hier genannte Zahl ist in `tests/test_claims.py` über die 100 festen Karte
 - **Das erste Brute-Force-Orakel war zu optimistisch dimensioniert.** Eine erste Erwartung (in Analogie zu `tt_oracle.py`s n ≤ 9 bei einem strukturell anderen, faktoriellen Problem) ging von einer praktikablen Grenze um n ≈ 16–20 aus. Real gemessen, nach der Szenario-Korrektur (dichterer Graph): bei n=12 bereits über 2 Sekunden im schlechtesten Fall, ab n≈13 drohen Läufe über mehrere Sekunden. `PRACTICAL_MAX_N = 9` (wie `hr_oracle.py`/`tt_oracle.py`) nach echter Messung, nicht nach Analogie.
 - **Die Regler-Obergrenzen mussten nach unten korrigiert werden.** Ein erster Entwurf erlaubte bis zu 60 Paare, Kreis-Höchstlänge 4, Ketten-Höchstlänge 6 – die Kombination aus großem Pool, hoher Kappung und hoher Sensibilisierung ließ den Kandidatenraum in der Praxis über mehrere zehn Sekunden hinaus wachsen (ein Extremfall lief über 60 Sekunden nicht durch). Nach echter Messung auf `N_MAX = 35`, `Kreis-Höchstlänge ≤ 3` begrenzt – der schlechteste beobachtete Fall bei diesen Grenzen liegt bei 0,7 Sekunden, auch am Rand der Regler (n=35, 10 altruistische Spender, Sensibilisierung 90 %).
 - **Eine naive Greedy-Heuristik kann trotz größerem Kandidatenraum schlechter abschneiden als der exakte Spezialfall.** Real gemessen (nicht angenommen): eine einfach sortierte Greedy-Auswahl über Kreise bis Länge 3 und Ketten bis Länge 4 verlor auf 58 von 100 Standardkarten gegen die EXAKTE Kappung-2-Lösung. Behoben durch Mehrfachstart (mehrere Sortierschlüssel plus randomisierte Neustarts) UND ein Sicherheitsnetz, das das exakte Kappung-2-Ergebnis immer als zusätzlichen Kandidaten mitführt – seitdem 0 von 100 Verlusten, per Konstruktion garantiert.
+- **Kappung 2 war nicht lexikografisch exakt (mit unabhängigem Orakel gefunden und behoben).** Das Matching maximierte zunächst nur die Summe der Kantenqualitäten, das Ziel der Demo ist aber zuerst die Patientenzahl, dann die Qualität. Mit `scipy.optimize.milp` und `networkx.max_weight_matching` als Orakel verschenkte dieses Gewicht auf 2 von 100 festen Karten (n=25) Patienten (z. B. 19 statt 21), die 60 kleinen Orakelkarten (n ≤ 9) hatten es nie getroffen. Jetzt trägt jede Kante ein Patientengewicht, das über jeder möglichen Gesamtqualität liegt; 0 Abweichungen auf über 1000 Zufallskarten bis n=35.
 
 ## Was die Demo zeigt
 
